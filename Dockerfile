@@ -30,5 +30,7 @@ RUN sed -i '35 s/# ARCH/ARCH/' Makefile
 RUN make
 
 RUN wget https://pjreddie.com/media/files/yolov3.weights
+RUN mkdir /root/bedrock
+WORKDIR /root/bedrock
 
 CMD ["./image_yolov3.sh"]
