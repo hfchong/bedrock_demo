@@ -16,14 +16,17 @@ def log_learnloss(output):
     bedrock.log_metric("learn_iteration", int(re.search("\d*", output.split()[0]).group().strip()))
 
 def run_command(command):
+    print(command)
     process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE, encoding='utf8')
     temp_map_val = ""
     map_ctr = 0
     while True:
         output = process.stdout.readline()
-
         if output == '' and process.poll() is not None:
             break
+
+        elif output == '':
+            continue
 
         elif "mean average precision (mAP@0.50)" in output:
             map_ctr = 1
@@ -47,27 +50,28 @@ def run_command(command):
         elif re.search('(?<=, ).*(?= avg)', output):
             log_learnloss(output)
 
+        print(map_ctr)
+        print(output)
+
     rc = process.poll()
     return rc
 
 
 weight = os.getenv('weights', 'darknet.conv.74')
-gpus = os.getenv('weights', 'darknet.conv.74')
+gpus = os.getenv('gpus', '0')
 cfg = os.getenv('cfg', 'yolov3/cfg')
 data = os.getenv('data', 'yolo')
-path = os.getenv('path', './')
+path = "./"
 destination = '/root/darknet'
 
 url = "http://pjreddie.com/media/files/darknet53.conv.74"
 
 # subprocess.run(["wget", "-O", path + url.split("/")[-1], url])
-
 # dest = shutil.move(path, destination)
 
-# subprocess.run(["/root/darknet", "detector", "train", "data/" + data, cfg, weight, "-gpus", gpus, "-map"])
-os.chdir("/home/nazar/NeuralNetworkFramework/Darknet")
-print(os.getcwd())
-run_command("./darknet detector map data/rotifer.data rotifer_exp01.cfg rotifer_exp01_best.weights")
 
-# Log metrics
-# bedrock.log_metric("Accuracy", acc)
+os.chdir("/home/nazar/NeuralNetworkFramework/Darknet")
+#os.chdir("/root/darknet")
+print(os.getcwd())
+
+# run_command("./darknet detector train data/rotifer.data rotifer_exp01.cfg rotifer_exp01_best.weights -gpus %s -map" %(gpus))

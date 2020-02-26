@@ -1,43 +1,24 @@
 train {
-    step preprocess {
-        image = "zarraozaga/alexyab_darknet"
-        install = ["pip3 install -r requirements-train.txt"]
-        script = [
-            {
-                sh = ["python3 preprocess.py"]
-            }
-        ]
-        resources {
-            cpu = "500m"
-            memory = "500M"
-        }
-    }
-
     step train {
-        image = "basisai/workload-standard"
+        image = "zarraozaga/alexyab_darknet:bedrock"
         install = ["pip3 install -r requirements-train.txt"]
         script = [
             {
-                sh = ["python3 train.py"]
+                sh = ["gsutil cp gs://bdrk-govtech-va-temp/data/20191114_143924_split_5-color0-rotate_270.jpg . && pwd"]
             }
         ]
         resources {
+            gpu = 0
             cpu = "500m"
             memory = "500M"
         }
-        depends_on = ["preprocess"]
     }
 
     parameters {
         weights = "darknet.conv.74"
-        weights_url = ""
+        gpus = "0"
         cfg = "my_string_2"
         data = "my_string_3"
         path = "/root/bedrock"
     }
-
-    secrets = [
-        "DUMMY_SECRET_A",
-        "DUMMY_SECRET_B"
-    ]
 }
