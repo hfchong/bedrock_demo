@@ -24,7 +24,7 @@ train {
         install = ["pip3 install -r requirements-train.txt"]
         script = [
             {
-                sh = ["pwd && gsutil cp gs://bdrk-govtech-va-temp/data/data.tar.xz . && tar xf data.tar.xz"]
+                sh = ["pwd && gsutil config -e && gsutil cp gs://bdrk-govtech-va-temp/data/data.tar.xz . && tar xf data.tar.xz"]
             }
         ]
         resources {
