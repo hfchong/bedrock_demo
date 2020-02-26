@@ -20,11 +20,11 @@ train {
     // A step's name must be unique.
 
     step train {
-        image = "google/cloud-sdk"
+        image = "hfchong/darknet:v0.1.0"
         install = ["pip3 install -r requirements-train.txt"]
         script = [
             {
-                sh = ["gsutil cp gs://bdrk-govtech-va-temp/data/data.tar.xz . && tar xf data.tar.xz && pwd"]
+                sh = ["source /root/google-cloud-sdk/path.bash.inc && gsutil cp gs://bdrk-govtech-va-temp/data/data.tar.xz . && tar xf data.tar.xz && pwd && ls"]
             }
         ]
         resources {
