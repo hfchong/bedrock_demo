@@ -4,7 +4,7 @@ train {
         install = ["pip3 install -r requirements-train.txt"]
         script = [
             {
-                sh = ["gsutil cp gs://bdrk-govtech-va-temp/data/20191114_143924_split_5-color0-rotate_270.jpg . && pwd"]
+                sh = ["gsutil cp gs://bdrk-govtech-va-temp/data/data.tar.xz . && tar xf data.tar.xz && pwd"]
             }
         ]
         resources {
