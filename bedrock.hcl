@@ -20,11 +20,11 @@ train {
     // A step's name must be unique.
 
     step train {
-        image = "basisai/workload-standard:v0.1.2"
+        image = "google/cloud-sdk"
         install = ["pip3 install -r requirements-train.txt"]
         script = [
             {
-                sh = ["pwd && gsutil config -e && gsutil cp gs://bdrk-govtech-va-temp/data/data.tar.xz . && tar xf data.tar.xz"]
+                sh = ["gsutil config -e && gsutil cp gs://bdrk-govtech-va-temp/data/data.tar.xz . && tar xf data.tar.xz && pwd"]
             }
         ]
         resources {
