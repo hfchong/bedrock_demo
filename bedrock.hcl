@@ -1,3 +1,6 @@
+ // Refer to https://docs.basis-ai.com/getting-started/writing-files/bedrock.hcl for more details.
+version = "1.0"
+
 train {
     step train {
         image = "zarraozaga/alexyab_darknet:bedrock"
