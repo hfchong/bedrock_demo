@@ -20,7 +20,7 @@ train {
     // A step's name must be unique.
 
     step train {
-        image = "zarraozaga/alexyab_darknet:bedrock"
+        image = "basisai/workload-standard:v0.1.2"
         install = ["pip3 install -r requirements-train.txt"]
         script = [
             {
