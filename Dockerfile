@@ -5,7 +5,7 @@ MAINTAINER Nachi nachi@dsaid.gov.sg
 ARG DEBIAN_FRONTEND=noninteractive
 
 
-# Install python 3.8.2
+# 1. Install python 3.8.2
 ENV PATH /usr/local/bin:$PATH
 
 # http://bugs.python.org/issue19846
@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		libopencv-dev \
 	    wget \
 	    curl \
-	    gnupg2 \
+	    gnupg \
 	&& rm -rf /var/lib/apt/lists/*
 
 ENV GPG_KEY E3FF2839C048B25C084DEBE9B26995E310250568
@@ -57,8 +57,8 @@ RUN set -ex \
 	&& wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
 	&& wget -O python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
 	&& export GNUPGHOME="$(mktemp -d)" \
-	&& gpg2 --batch --keyserver ipv4.pool.sks-keyservers.net --recv-keys "$GPG_KEY" \
-	&& gpg2 --batch --verify python.tar.xz.asc python.tar.xz \
+	&& gpg --batch --keyserver ipv4.pool.sks-keyservers.net --recv-keys "$GPG_KEY" \
+	&& gpg --batch --verify python.tar.xz.asc python.tar.xz \
 	&& { command -v gpgconf > /dev/null && gpgconf --kill all || :; } \
 	&& rm -rf "$GNUPGHOME" python.tar.xz.asc \
 	&& mkdir -p /usr/src/python \
@@ -143,13 +143,13 @@ RUN set -ex; \
 	rm -f get-pip.py
 
 
-# Install google cloud sdk
+# 2. Install google cloud sdk
 RUN curl https://sdk.cloud.google.com > install.sh; \
 	/bin/bash install.sh --disable-prompts; \
     rm install.sh
 
 
-# install darknet
+# 3. Install darknet
 RUN git clone https://github.com/AlexeyAB/darknet.git /root/darknet
 WORKDIR /root/darknet
 RUN sed -i s/GPU=0/GPU=1/g Makefile
@@ -166,12 +166,17 @@ RUN sed -i s/LIBSO=0/LIBSO=1/g Makefile
 RUN sed -i '17 s/ARCH/# ARCH/' Makefile
 RUN sed -i '35 s/# ARCH/ARCH/' Makefile 
 RUN make
-
 RUN wget https://pjreddie.com/media/files/yolov3.weights
-RUN mkdir /root/bedrock
-WORKDIR /root/bedrock
 
+
+# 4. Set default shell to bash
 RUN echo "dash dash/sh boolean false" | debconf-set-selections
-RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
+RUN dpkg-reconfigure dash
+
+
+# 5. Clean up
+RUN apt-get clean; \
+    apt-get autoremove --purge; \
+    rm -rf /var/lib/apt/lists/*
 
 CMD ["./image_yolov3.sh"]
