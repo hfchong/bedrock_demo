@@ -24,7 +24,7 @@ train {
         install = ["pip3 install -r requirements-train.txt"]
         script = [
             {
-                sh = ["source /root/google-cloud-sdk/path.bash.inc && gsutil cp gs://bdrk-govtech-va-temp/data/data.tar.xz . && tar xf data.tar.xz && pwd && ls"]
+                sh = ["source /root/google-cloud-sdk/path.bash.inc && gsutil cp gs://bdrk-govtech-va-temp/rotifer_exp_06.tar.xz . && tar xf rotifer_exp_06.tar.xz && echo Pwd: && pwd && echo ls: && ls -l"]
             }
         ]
         resources {
