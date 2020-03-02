@@ -24,20 +24,20 @@ train {
         install = ["pip3 install -r requirements-train.txt"]
         script = [
             {
-                sh = ["source /root/google-cloud-sdk/path.bash.inc && gsutil cp gs://bdrk-govtech-va-temp/rotifer_exp_06.tar.xz . && tar xf rotifer_exp_06.tar.xz && echo Pwd: && pwd && echo ls: && ls -l"]
+                //sh = ["ls /root && source /root/google-cloud-sdk/path.bash.inc && gsutil cp gs://bdrk-govtech-va-temp/rotifer_exp_06.tar.xz . && tar xf rotifer_exp_06.tar.xz && pwd && ls"]
+                sh = ["chmod a+x train.sh && ./train.sh"]
             }
         ]
         resources {
-            cpu = "500m"
-            memory = "500M"
+            cpu = "2900m"
+            memory = "11500M"
+            gpu = "1"
         }
     }
 
     parameters {
-        weights = "darknet.conv.74"
-        gpus = "0"
-        cfg = "my_string_2"
-        data = "my_string_3"
-        path = "/root/bedrock"
+        LOGFILE = "/artefact/experiment_log.txt"
+        ITERATIONS_STOP = "10"
+        MAP_STOP = "70.5"
     }
 }
